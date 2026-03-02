@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>fafc539e-7047-4bbd-b5cb-0b65e32115f8</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,6 +17,10 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Game.GrandArchive\Game.GrandArchive.csproj" />
     </ItemGroup>
 
 </Project>

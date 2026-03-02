@@ -1,6 +1,8 @@
 using Disqord;
 using Disqord.Bot.Hosting;
 using Disqord.Gateway;
+using Game.GrandArchive;
+using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,9 @@ builder.Host.ConfigureDiscordBot((_, bot) =>
     bot.Status = UserStatus.DoNotDisturb;
     bot.Activities = [new LocalActivity("with the Grand Archive API", ActivityType.Playing)];
 });
+
+builder.Services.AddRefitClient<IGrandArchiveApi>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.gatcg.com"));
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
