@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", "{23B958C5-6FCC-40E5-929B-5AF94581587C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0DB4428F-D478-4F72-AD67-E6D7D79D8BCC}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.GrandArchive", "Game.GrandArchive\Game.GrandArchive.csproj", "{75FB66C4-C87A-46F7-A4B3-EAB846937AE1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23B958C5-6FCC-40E5-929B-5AF94581587C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23B958C5-6FCC-40E5-929B-5AF94581587C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23B958C5-6FCC-40E5-929B-5AF94581587C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23B958C5-6FCC-40E5-929B-5AF94581587C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75FB66C4-C87A-46F7-A4B3-EAB846937AE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75FB66C4-C87A-46F7-A4B3-EAB846937AE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75FB66C4-C87A-46F7-A4B3-EAB846937AE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75FB66C4-C87A-46F7-A4B3-EAB846937AE1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
