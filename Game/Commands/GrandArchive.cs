@@ -1,6 +1,7 @@
 ﻿using Disqord;
+using Disqord.Bot.Commands;
 using Disqord.Bot.Commands.Application;
-using Disqord.Bot.Commands.Interaction;
+using Disqord.Extensions.Interactivity.Menus.Paged;
 using Game.GrandArchive;
 
 namespace Game.Commands;
@@ -8,25 +9,39 @@ namespace Game.Commands;
 [SlashGroup("ga")]
 public class GrandArchive : DiscordApplicationModuleBase
 {
+    private readonly ILogger<GrandArchive> _logger;
+
+    public GrandArchive(ILogger<GrandArchive> logger)
+    {
+        _logger = logger;
+    }
+
     [SlashCommand("search")]
-    public async Task<DiscordInteractionResponseCommandResult> SearchAsync(string name)
+    public async Task<DiscordCommandResult<IDiscordCommandContext>> SearchAsync(string name)
     {
         var response = await Context.Services.GetRequiredService<IGrandArchiveApi>().Search(name);
-        if (response.Data.Count == 0)
-            return Response("No cards found.");
-
-        var card = response.Data.FirstOrDefault();
-        if (card is null)
+        if (response.Content is null)
         {
             return Response("No cards found.");
         }
 
-        var embed = new LocalEmbed()
-            .WithTitle(card.Name ?? "Unknown Card")
-            .WithDescription(card.Flavor ?? string.Empty + "\n\n" + card.EffectRaw)
-            .WithImageUrl("https://api.gatcg.com" + card.Editions.FirstOrDefault()?.Image)
-            .WithFooter("Data provided by the Grand Archive Index API");
+        var pages = new Page[response.Content.Data.Count + 1];
+        pages[0] = new Page().WithContent($"Found {response.Content.TotalCards} cards matching '{name}'. " +
+                                          $"Displaying page 1 of {response.Content.TotalPages}.");
+        for (var i = 0; i < response.Content.Data.Count; i++)
+        {
+            var card = response.Content.Data[i];
 
-        return Response(embed);
+            _logger.LogInformation("Card {Index}: {Name} (ID: {Id})",
+                i + 1, card.Name, card.Editions.FirstOrDefault()?.CardId);
+
+            var embed = new LocalEmbed().WithTitle(card.Name ?? "Unknown Card")
+                .WithDescription(card.Flavor ?? string.Empty + "\n\n" + card.EffectRaw)
+                .WithImageUrl("https://api.gatcg.com" + card.Editions.FirstOrDefault()?.Image)
+                .WithFooter("Data provided by the Grand Archive Index API");
+            pages[i + 1] = new Page().WithEmbeds(embed);
+        }
+
+        return Pages(pages);
     }
 }
