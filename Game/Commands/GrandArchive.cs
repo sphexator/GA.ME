@@ -29,22 +29,15 @@ public class GrandArchive(ILogger<GrandArchive> logger) : DiscordApplicationModu
 
             logger.LogInformation("Card {Index}: {Name} (ID: {Id})", pageNumber, card.Name, edition?.CardId);
 
-            var descriptionParts = new[] { card.Flavor, card.EffectRaw }
-                .Where(part => !string.IsNullOrWhiteSpace(part));
-            var description = string.Join("\n\n", descriptionParts);
-            if (string.IsNullOrWhiteSpace(description))
-            {
-                description = "No description available.";
-            }
-
             var embed = new LocalEmbed()
-                .WithTitle(card.Name ?? "Unknown Card")
-                .WithDescription(description)
+                .WithTitle(CardPresentationBuilder.BuildTitle(card))
+                .WithDescription(CardPresentationBuilder.BuildDescription(card))
                 .WithFooter($"Page {pageNumber}/{cards.Count} - Data provided by the Grand Archive Index API");
 
-            if (!string.IsNullOrWhiteSpace(edition?.Image))
+            var imageUrl = CardPresentationBuilder.BuildImageUrl(edition);
+            if (imageUrl is not null)
             {
-                embed = embed.WithImageUrl($"https://api.gatcg.com{edition.Image}");
+                embed = embed.WithImageUrl(imageUrl);
             }
 
             pages[i] = new Page().WithEmbeds(embed);

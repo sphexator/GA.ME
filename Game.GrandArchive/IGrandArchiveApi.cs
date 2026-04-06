@@ -72,7 +72,7 @@ public sealed class Card
 
     [JsonPropertyName("rule")] public List<object> Rule { get; set; } = [];
 
-    [JsonPropertyName("speed")] public object Speed { get; set; }
+    [JsonPropertyName("speed")] public object? Speed { get; set; }
 
     [JsonPropertyName("slug")] public string? Slug { get; set; }
 
