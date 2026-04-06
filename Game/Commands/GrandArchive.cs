@@ -7,39 +7,47 @@ using Game.GrandArchive;
 namespace Game.Commands;
 
 [SlashGroup("ga")]
-public class GrandArchive : DiscordApplicationModuleBase
+public class GrandArchive(ILogger<GrandArchive> logger) : DiscordApplicationModuleBase
 {
-    private readonly ILogger<GrandArchive> _logger;
-
-    public GrandArchive(ILogger<GrandArchive> logger)
-    {
-        _logger = logger;
-    }
-
     [SlashCommand("search")]
     public async Task<DiscordCommandResult<IDiscordCommandContext>> SearchAsync(string name)
     {
         var response = await Context.Services.GetRequiredService<IGrandArchiveApi>().Search(name);
-        if (response.Content is null)
+        if (response.Content is null || response.Content.Data.Count == 0)
         {
             return Response("No cards found.");
         }
 
-        var pages = new Page[response.Content.Data.Count + 1];
-        pages[0] = new Page().WithContent($"Found {response.Content.TotalCards} cards matching '{name}'. " +
-                                          $"Displaying page 1 of {response.Content.TotalPages}.");
-        for (var i = 0; i < response.Content.Data.Count; i++)
-        {
-            var card = response.Content.Data[i];
-            
-            _logger.LogInformation("Card {Index}: {Name} (ID: {Id})",
-                i + 1, card.Name, card.Editions.FirstOrDefault()?.CardId);
+        var cards = response.Content.Data;
+        var pages = new Page[cards.Count];
 
-            var embed = new LocalEmbed().WithTitle(card.Name ?? "Unknown Card")
-                .WithDescription(card.Flavor ?? string.Empty + "\n\n" + card.EffectRaw)
-                .WithImageUrl(card.Editions.FirstOrDefault() is null ? "https://api.gatcg.com" + card.Editions.FirstOrDefault().Image : string.Empty)
-                .WithFooter("Data provided by the Grand Archive Index API");
-            pages[i + 1] = new Page().WithEmbeds(embed);
+        for (var i = 0; i < cards.Count; i++)
+        {
+            var card = cards[i];
+            var edition = card.Editions.FirstOrDefault();
+            var pageNumber = i + 1;
+
+            logger.LogInformation("Card {Index}: {Name} (ID: {Id})", pageNumber, card.Name, edition?.CardId);
+
+            var descriptionParts = new[] { card.Flavor, card.EffectRaw }
+                .Where(part => !string.IsNullOrWhiteSpace(part));
+            var description = string.Join("\n\n", descriptionParts);
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                description = "No description available.";
+            }
+
+            var embed = new LocalEmbed()
+                .WithTitle(card.Name ?? "Unknown Card")
+                .WithDescription(description)
+                .WithFooter($"Page {pageNumber}/{cards.Count} - Data provided by the Grand Archive Index API");
+
+            if (!string.IsNullOrWhiteSpace(edition?.Image))
+            {
+                embed = embed.WithImageUrl($"https://api.gatcg.com{edition.Image}");
+            }
+
+            pages[i] = new Page().WithEmbeds(embed);
         }
 
         return Pages(pages);
