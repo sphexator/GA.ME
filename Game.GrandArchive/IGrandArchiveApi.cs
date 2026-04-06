@@ -7,7 +7,7 @@ namespace Game.GrandArchive;
 public interface IGrandArchiveApi
 {
     [Get("/cards/search")]
-    Task<IApiResponse<CardsResponse>> Search (string name);
+    Task<IApiResponse<CardsResponse>> SearchAsync (string name);
 }
 
 public sealed class CardsResponse

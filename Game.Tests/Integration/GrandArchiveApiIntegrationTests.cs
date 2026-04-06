@@ -47,7 +47,7 @@ public class GrandArchiveApiIntegrationTests
 
         var api = RestService.For<IGrandArchiveApi>(httpClient);
 
-        var result = await api.Search("Rai Storm");
+        var result = await api.SearchAsync("Rai Storm");
 
         Assert.NotNull(handler.LastRequest);
         Assert.Equal("/cards/search", handler.LastRequest!.RequestUri!.AbsolutePath);

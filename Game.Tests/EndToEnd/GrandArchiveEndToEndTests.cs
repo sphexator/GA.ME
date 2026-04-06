@@ -20,7 +20,7 @@ public class LiveGrandArchiveE2ETests
         };
 
         var api = RestService.For<IGrandArchiveApi>(httpClient);
-        var result = await api.Search("Rai");
+        var result = await api.SearchAsync("Rai");
 
         Assert.NotNull(result.Content);
         Assert.NotEmpty(result.Content!.Data);

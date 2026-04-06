@@ -12,7 +12,7 @@ public class GrandArchive(ILogger<GrandArchive> logger) : DiscordApplicationModu
     [SlashCommand("search")]
     public async Task<DiscordCommandResult<IDiscordCommandContext>> SearchAsync(string name)
     {
-        var response = await Context.Services.GetRequiredService<IGrandArchiveApi>().Search(name);
+        var response = await Context.Services.GetRequiredService<IGrandArchiveApi>().SearchAsync(name);
         if (response.Content is null || response.Content.Data.Count == 0)
         {
             return Response("No cards found.");
