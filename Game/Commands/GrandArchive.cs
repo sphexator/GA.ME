@@ -31,13 +31,13 @@ public class GrandArchive : DiscordApplicationModuleBase
         for (var i = 0; i < response.Content.Data.Count; i++)
         {
             var card = response.Content.Data[i];
-
+            
             _logger.LogInformation("Card {Index}: {Name} (ID: {Id})",
                 i + 1, card.Name, card.Editions.FirstOrDefault()?.CardId);
 
             var embed = new LocalEmbed().WithTitle(card.Name ?? "Unknown Card")
                 .WithDescription(card.Flavor ?? string.Empty + "\n\n" + card.EffectRaw)
-                .WithImageUrl("https://api.gatcg.com" + card.Editions.FirstOrDefault()?.Image)
+                .WithImageUrl(card.Editions.FirstOrDefault() is null ? "https://api.gatcg.com" + card.Editions.FirstOrDefault().Image : string.Empty)
                 .WithFooter("Data provided by the Grand Archive Index API");
             pages[i + 1] = new Page().WithEmbeds(embed);
         }
