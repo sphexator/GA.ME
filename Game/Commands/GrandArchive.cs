@@ -10,9 +10,11 @@ namespace Game.Commands;
 public enum EditionType
 {
     [Display(Name = "None-Foil")]
-    Nonefoil,
+    NoneFoil,
+
     [Display(Name = "Foil")]
     Foil,
+
     [Display(Name = "CSR")]
     Csr
 }
@@ -21,7 +23,8 @@ public enum EditionType
 public class GrandArchive(ILogger<GrandArchive> logger) : DiscordApplicationGuildModuleBase
 {
     [SlashCommand("search")]
-    public async Task<DiscordCommandResult<IDiscordCommandContext>> SearchAsync(string name, AutoComplete<string> typeFilter)
+    public async Task<DiscordCommandResult<IDiscordCommandContext>> SearchAsync(string name,
+        AutoComplete<string> typeFilter)
     {
         var response = await Context.Services.GetRequiredService<IGrandArchiveApi>().SearchAsync(name);
         if (response.Content is null || response.Content.Data.Count == 0)
@@ -58,12 +61,14 @@ public class GrandArchive(ILogger<GrandArchive> logger) : DiscordApplicationGuil
     }
 
     [AutoComplete("search")]
-    public IEnumerable<string> AutoCompleteEditionTypeAsync(string input)
+    public void AutoCompleteEditionTypeAsync(AutoComplete<string> typeFilter)
     {
+        if (!typeFilter.IsFocused) return;
         var result = Enum.GetValues<EditionType>()
-            .Where(e => e.ToString()
-                .Contains(input, StringComparison.OrdinalIgnoreCase))
-            .Select(e => e.ToString());
-        return result;
+            .Select(e => e.ToString()).ToArray();
+        for (int i = 0; i < result.Length; i++)
+        {
+            typeFilter.Choices.Add(result[i], result[i]);
+        }
     }
 }
