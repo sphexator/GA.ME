@@ -1,4 +1,5 @@
-﻿using Disqord;
+﻿using System.ComponentModel.DataAnnotations;
+using Disqord;
 using Disqord.Bot.Commands;
 using Disqord.Bot.Commands.Application;
 using Disqord.Extensions.Interactivity.Menus.Paged;
@@ -6,11 +7,21 @@ using Game.GrandArchive;
 
 namespace Game.Commands;
 
+public enum EditionType
+{
+    [Display(Name = "None-Foil")]
+    Nonefoil,
+    [Display(Name = "Foil")]
+    Foil,
+    [Display(Name = "CSR")]
+    Csr
+}
+
 [SlashGroup("ga")]
-public class GrandArchive(ILogger<GrandArchive> logger) : DiscordApplicationModuleBase
+public class GrandArchive(ILogger<GrandArchive> logger) : DiscordApplicationGuildModuleBase
 {
     [SlashCommand("search")]
-    public async Task<DiscordCommandResult<IDiscordCommandContext>> SearchAsync(string name)
+    public async Task<DiscordCommandResult<IDiscordCommandContext>> SearchAsync(string name, AutoComplete<string> typeFilter)
     {
         var response = await Context.Services.GetRequiredService<IGrandArchiveApi>().SearchAsync(name);
         if (response.Content is null || response.Content.Data.Count == 0)
@@ -44,5 +55,15 @@ public class GrandArchive(ILogger<GrandArchive> logger) : DiscordApplicationModu
         }
 
         return Pages(pages);
+    }
+
+    [AutoComplete("search")]
+    public IEnumerable<string> AutoCompleteEditionTypeAsync(string input)
+    {
+        var result = Enum.GetValues<EditionType>()
+            .Where(e => e.ToString()
+                .Contains(input, StringComparison.OrdinalIgnoreCase))
+            .Select(e => e.ToString());
+        return result;
     }
 }

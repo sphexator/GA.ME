@@ -13,7 +13,7 @@ builder.Host.ConfigureDiscordBot((_, bot) =>
     bot.OwnerIds = [builder.Configuration.GetValue<ulong>("Discord:OwnerId")];
     bot.ApplicationId = builder.Configuration.GetValue<ulong>("Discord:ApplicationId");
     bot.UseMentionPrefix = true;
-    bot.Intents = GatewayIntents.All;
+    bot.Intents = GatewayIntents.None;
     bot.Status = UserStatus.DoNotDisturb;
     bot.Activities = [new LocalActivity("with the Grand Archive API", ActivityType.Playing)];
 });
