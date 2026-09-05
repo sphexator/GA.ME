@@ -18,7 +18,7 @@ builder.Host.ConfigureDiscordBot((_, bot) =>
     bot.Activities = [new LocalActivity("with the Grand Archive API", ActivityType.Playing)];
 });
 
-builder.Services.AddRefitClient<IGrandArchiveApi>()
+builder.Services.AddRefitGeneratedClient<IGrandArchiveApi>()
     .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.gatcg.com"));
 
 var app = builder.Build();

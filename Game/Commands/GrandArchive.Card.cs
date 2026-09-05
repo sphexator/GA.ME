@@ -14,9 +14,9 @@ public partial class GrandArchive
         [SlashCommand("slug")]
         [Description("Gets a card by its slug.")]
         public async Task<DiscordCommandResult<IDiscordCommandContext>> SlugAsync(
-            [Description("The card slug.")] AutoComplete<string> slug)
+            [Description("The card slug.")] string slug)
         {
-            var response = await api.GetBySlugAsync(slug.Argument.Value);
+            var response = await api.GetBySlugAsync(slug);
             return RespondWithCard(response, "No card found for that slug.");
         }
 

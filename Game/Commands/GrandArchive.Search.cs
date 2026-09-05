@@ -16,7 +16,7 @@ public partial class GrandArchive
         [Description("Searches cards by name.")]
         public async Task<DiscordCommandResult<IDiscordCommandContext>> NameAsync(
             [Description("The card name (or part of it).")]
-            AutoComplete<string> name,
+            string name,
             [Description("The field to sort by (default: collector_number).")]
             string? sort = null,
             [Description("The result order.")] ResultOrder order = ResultOrder.Asc,
@@ -26,7 +26,7 @@ public partial class GrandArchive
             int page = 1)
         {
             var query = SharedQuery(sort, order, pageSize, page);
-            query.Name = name.Argument.Value;
+            query.Name = name;
             return await SearchAndRespondAsync(query);
         }
 
