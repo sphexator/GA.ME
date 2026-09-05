@@ -3,10 +3,10 @@ using Refit;
 
 namespace Game.GrandArchive;
 
-public interface IGrandArchiveApi
+public interface IGrandArchiveApi : IMultiCardsApi, IIndividualCardsApi, IFeaturedSetsApi, IOmnidexApi
 {
     [Get("/cards/search")]
-    Task<IApiResponse<CardsResponse>> SearchAsync(string name);
+    Task<IApiResponse<CardsResponse>> SearchAsync([AliasAs("name")] string name);
 }
 
 public sealed class CardsResponse
