@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Disqord.Bot" Version="1.0.0-alpha5.114" />
+        <PackageReference Include="Disqord.Bot" Version="1.0.0-alpha5.115"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11"/>
     </ItemGroup>
 
